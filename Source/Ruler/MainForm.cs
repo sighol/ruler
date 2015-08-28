@@ -90,6 +90,9 @@ namespace Ruler
 			this.Font = new Font("Tahoma", 10);
 
 			this.SetStyle(ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
+
+			MouseDoubleClick += (sender, args) =>
+				{ IsVertical = !IsVertical; };
 		}
 
 		private RulerInfo GetRulerInfo()
@@ -440,7 +443,9 @@ namespace Ruler
 			g.DrawRectangle(Pens.Black, 0, 0, formWidth - 1, formHeight - 1);
 
 			// Width
-			g.DrawString(formWidth + " pixels", Font, Brushes.Black, 10, (formHeight / 2) - (Font.Height / 2));
+			const double PixelsPerMillimeter = 96/25.4;
+			var widthString = string.Format("{0} px, {1,2:F} mm", formWidth, formWidth / PixelsPerMillimeter);
+			g.DrawString(widthString, Font, Brushes.Black, 10, (formHeight / 2) - (Font.Height / 2));
 
 			// Ticks
 			for (int i = 0; i < formWidth; i++)
