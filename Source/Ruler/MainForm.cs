@@ -8,7 +8,9 @@ namespace Ruler
 {
 	sealed public class MainForm : Form, IRulerInfo
 	{
-		#region ResizeRegion enum
+	    private const double PixelsPerMillimeter = 96/25.4;
+
+	    #region ResizeRegion enum
 
 		private enum ResizeRegion
 		{
@@ -243,7 +245,7 @@ namespace Ruler
 
 		private void SetToolTip()
 		{
-			_toolTip.SetToolTip(this, string.Format("Width: {0} pixels\nHeight: {1} pixels", Width, Height));
+			_toolTip.SetToolTip(this, string.Format("Width: {0}\nHeight: {1}", SizeToString(Width), SizeToString(Height)));
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
@@ -443,9 +445,7 @@ namespace Ruler
 			g.DrawRectangle(Pens.Black, 0, 0, formWidth - 1, formHeight - 1);
 
 			// Width
-			const double PixelsPerMillimeter = 96/25.4;
-			var widthString = string.Format("{0} px, {1,2:F} mm", formWidth, formWidth / PixelsPerMillimeter);
-			g.DrawString(widthString, Font, Brushes.Black, 10, (formHeight / 2) - (Font.Height / 2));
+			g.DrawString(SizeToString(formWidth), Font, Brushes.Black, 10, (formHeight / 2) - (Font.Height / 2));
 
 			// Ticks
 			for (int i = 0; i < formWidth; i++)
@@ -472,7 +472,12 @@ namespace Ruler
 			}
 		}
 
-		private static void DrawTick(Graphics g, int xPos, int formHeight, int tickHeight)
+	    private static string SizeToString(int formWidth)
+	    {
+	        return string.Format("{0} px, {1,2:F} mm", formWidth, formWidth / PixelsPerMillimeter);
+	    }
+
+	    private static void DrawTick(Graphics g, int xPos, int formHeight, int tickHeight)
 		{
 			// Top
 			g.DrawLine(Pens.Black, xPos, 0, xPos, tickHeight);
