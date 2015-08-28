@@ -447,52 +447,81 @@ namespace Ruler
 			// Width
 			g.DrawString(SizeToString(formWidth), Font, Brushes.Black, 10, (formHeight / 2) - (Font.Height / 2));
 
-			// Ticks
-			for (int i = 0; i < formWidth; i++)
+			// Millimeter Ticks
+			for (int i = 0; i < formWidth/PixelsPerMillimeter; i++)
 			{
-				if (i % 2 == 0)
+				double x = i * PixelsPerMillimeter;
+				int tickHeight;
+				if (i % 50 == 0)
 				{
-					int tickHeight;
-					if (i % 100 == 0)
-					{
-						tickHeight = 15;
-						DrawTickLabel(g, i.ToString(), i, formHeight, tickHeight);
-					}
-					else if (i % 10 == 0)
-					{
-						tickHeight = 10;
-					}
-					else
-					{
-						tickHeight = 5;
-					}
-
-					DrawTick(g, i, formHeight, tickHeight);
+					tickHeight = 15;
+					DrawTickLabel(g, i.ToString() + "mm", (int)x, formHeight, tickHeight, true);
 				}
+				else if (i % 10 == 0)
+				{
+					tickHeight = 10;
+				}
+				else
+				{
+					tickHeight = 5;
+				}
+
+                DrawTick(g, (int)x, formHeight, tickHeight, true);
 			}
+
+            // Pixel Ticks
+            for (int i = 0; i < formWidth; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    double x = i * PixelsPerMillimeter;
+                    int tickHeight;
+                    if (i % 100 == 0)
+                    {
+                        tickHeight = 15;
+                        DrawTickLabel(g, i.ToString() + "px", i, formHeight, tickHeight);
+                    }
+                    else if (i % 10 == 0)
+                    {
+                        tickHeight = 10;
+                    }
+                    else
+                    {
+                        tickHeight = 5;
+                    }
+
+                    DrawTick(g, i, formHeight, tickHeight);
+                }
+            }
 		}
 
 	    private static string SizeToString(int formWidth)
 	    {
-	        return string.Format("{0} px, {1,2:F} mm", formWidth, formWidth / PixelsPerMillimeter);
+	        return string.Format("{0}px, {1,2:F}mm", formWidth, formWidth / PixelsPerMillimeter);
 	    }
 
-	    private static void DrawTick(Graphics g, int xPos, int formHeight, int tickHeight)
+	    private static void DrawTick(Graphics g, int xPos, int formHeight, int tickHeight, bool isTop = false)
 		{
-			// Top
-			g.DrawLine(Pens.Black, xPos, 0, xPos, tickHeight);
-
-			// Bottom
-			g.DrawLine(Pens.Black, xPos, formHeight, xPos, formHeight - tickHeight);
+	        if (isTop)
+	        {
+                g.DrawLine(Pens.Black, xPos, 0, xPos, tickHeight);
+	        }
+	        else
+	        {
+                g.DrawLine(Pens.Black, xPos, formHeight, xPos, formHeight - tickHeight);
+	        }
 		}
 
-		private void DrawTickLabel(Graphics g, string text, int xPos, int formHeight, int height)
+		private void DrawTickLabel(Graphics g, string text, int xPos, int formHeight, int height, bool isTop = false)
 		{
-			// Top
-			g.DrawString(text, Font, Brushes.Black, xPos, height);
-
-			// Bottom
-			g.DrawString(text, Font, Brushes.Black, xPos, formHeight - height - Font.Height);
+		    if (isTop)
+		    {
+		        g.DrawString(text, Font, Brushes.Black, xPos, height);
+		    }
+		    else
+		    {
+			    g.DrawString(text, Font, Brushes.Black, xPos, formHeight - height - Font.Height);
+		    }
 		}
 
 		private static void Main(params string[] args)
