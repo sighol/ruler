@@ -95,6 +95,9 @@ namespace Ruler
 
 			MouseDoubleClick += (sender, args) =>
 				{ IsVertical = !IsVertical; };
+
+		    _toolTipMenuItem.Checked = true;
+		    this._toolTip.AutoPopDelay = 9999;
 		}
 
 		private RulerInfo GetRulerInfo()
@@ -269,77 +272,51 @@ namespace Ruler
 
 		private void HandleMoveResizeKeystroke(KeyEventArgs e)
 		{
+		    var size = e.Control ? 1 : 10;
+		    var shouldResize = e.Shift;
 			if (e.KeyCode == Keys.Right)
 			{
-				if (e.Control)
-				{
-					if (e.Shift)
-					{
-						Width += 1;
-					}
-					else
-					{
-						Left += 1;
-					}
-				}
-				else
-				{
-					Left += 5;
-				}
+			    if (shouldResize)
+			    {
+			        Width += size;
+			    }
+			    else
+			    {
+			        Left += size;
+			    }
 			}
 			else if (e.KeyCode == Keys.Left)
 			{
-				if (e.Control)
-				{
-					if (e.Shift)
-					{
-						Width -= 1;
-					}
-					else
-					{
-						Left -= 1;
-					}
-				}
-				else
-				{
-					Left -= 5;
-				}
+                if (shouldResize)
+                {
+                    Width -= size;
+                }
+                else
+                {
+                    Left -= size;
+                }
 			}
 			else if (e.KeyCode == Keys.Up)
 			{
-				if (e.Control)
-				{
-					if (e.Shift)
-					{
-						Height -= 1;
-					}
-					else
-					{
-						Top -= 1;
-					}
-				}
-				else
-				{
-					Top -= 5;
-				}
+                if (shouldResize)
+                {
+                    Height -= size;
+                }
+                else
+                {
+                    Top -= size;
+                }
 			}
 			else if (e.KeyCode == Keys.Down)
 			{
-				if (e.Control)
-				{
-					if (e.Shift)
-					{
-						Height += 1;
-					}
-					else
-					{
-						Top += 1;
-					}
-				}
-				else
-				{
-					Top += 5;
-				}
+                if (shouldResize)
+                {
+                    Height += size;
+                }
+                else
+                {
+                    Top += size;
+                }
 			}
 		}
 
