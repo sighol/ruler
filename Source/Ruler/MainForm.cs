@@ -8,9 +8,9 @@ namespace Ruler
 {
 	sealed public class MainForm : Form, IRulerInfo
 	{
-	    private const double PixelsPerMillimeter = 96/25.4;
+		private const double PixelsPerMillimeter = 96/25.4;
 
-	    #region ResizeRegion enum
+		#region ResizeRegion enum
 
 		private enum ResizeRegion
 		{
@@ -96,8 +96,8 @@ namespace Ruler
 			MouseDoubleClick += (sender, args) =>
 				{ IsVertical = !IsVertical; };
 
-		    _toolTipMenuItem.Checked = true;
-		    this._toolTip.AutoPopDelay = 9999;
+			_toolTipMenuItem.Checked = true;
+			this._toolTip.AutoPopDelay = 9999;
 		}
 
 		private RulerInfo GetRulerInfo()
@@ -265,6 +265,9 @@ namespace Ruler
 				case Keys.Space:
 					ChangeOrientation();
 					break;
+				case Keys.Enter:
+					MessageBox.Show(string.Format("Width: {0}\nHeight: {1}", SizeToString(Width), SizeToString(Height)));
+					break;
 			}
 
 			base.OnKeyDown(e);
@@ -272,51 +275,51 @@ namespace Ruler
 
 		private void HandleMoveResizeKeystroke(KeyEventArgs e)
 		{
-		    var size = e.Control ? 1 : 10;
-		    var shouldResize = e.Shift;
+			var size = e.Control ? 1 : 10;
+			var shouldResize = e.Shift;
 			if (e.KeyCode == Keys.Right)
 			{
-			    if (shouldResize)
-			    {
-			        Width += size;
-			    }
-			    else
-			    {
-			        Left += size;
-			    }
+				if (shouldResize)
+				{
+					Width += size;
+				}
+				else
+				{
+					Left += size;
+				}
 			}
 			else if (e.KeyCode == Keys.Left)
 			{
-                if (shouldResize)
-                {
-                    Width -= size;
-                }
-                else
-                {
-                    Left -= size;
-                }
+				if (shouldResize)
+				{
+					Width -= size;
+				}
+				else
+				{
+					Left -= size;
+				}
 			}
 			else if (e.KeyCode == Keys.Up)
 			{
-                if (shouldResize)
-                {
-                    Height -= size;
-                }
-                else
-                {
-                    Top -= size;
-                }
+				if (shouldResize)
+				{
+					Height -= size;
+				}
+				else
+				{
+					Top -= size;
+				}
 			}
 			else if (e.KeyCode == Keys.Down)
 			{
-                if (shouldResize)
-                {
-                    Height += size;
-                }
-                else
-                {
-                    Top += size;
-                }
+				if (shouldResize)
+				{
+					Height += size;
+				}
+				else
+				{
+					Top += size;
+				}
 			}
 		}
 
@@ -443,62 +446,62 @@ namespace Ruler
 					tickHeight = 5;
 				}
 
-                DrawTick(g, (int)x, formHeight, tickHeight, true);
+				DrawTick(g, (int)x, formHeight, tickHeight, true);
 			}
 
-            // Pixel Ticks
-            for (int i = 0; i < formWidth; i++)
-            {
-                if (i % 2 == 0)
-                {
-                    double x = i * PixelsPerMillimeter;
-                    int tickHeight;
-                    if (i % 100 == 0)
-                    {
-                        tickHeight = 15;
-                        DrawTickLabel(g, i.ToString() + "px", i, formHeight, tickHeight);
-                    }
-                    else if (i % 10 == 0)
-                    {
-                        tickHeight = 10;
-                    }
-                    else
-                    {
-                        tickHeight = 5;
-                    }
+			// Pixel Ticks
+			for (int i = 0; i < formWidth; i++)
+			{
+				if (i % 2 == 0)
+				{
+					double x = i * PixelsPerMillimeter;
+					int tickHeight;
+					if (i % 100 == 0)
+					{
+						tickHeight = 15;
+						DrawTickLabel(g, i.ToString() + "px", i, formHeight, tickHeight);
+					}
+					else if (i % 10 == 0)
+					{
+						tickHeight = 10;
+					}
+					else
+					{
+						tickHeight = 5;
+					}
 
-                    DrawTick(g, i, formHeight, tickHeight);
-                }
-            }
+					DrawTick(g, i, formHeight, tickHeight);
+				}
+			}
 		}
 
-	    private static string SizeToString(int formWidth)
-	    {
-	        return string.Format("{0}px, {1,2:F}mm", formWidth, formWidth / PixelsPerMillimeter);
-	    }
-
-	    private static void DrawTick(Graphics g, int xPos, int formHeight, int tickHeight, bool isTop = false)
+		private static string SizeToString(int formWidth)
 		{
-	        if (isTop)
-	        {
-                g.DrawLine(Pens.Black, xPos, 0, xPos, tickHeight);
-	        }
-	        else
-	        {
-                g.DrawLine(Pens.Black, xPos, formHeight, xPos, formHeight - tickHeight);
-	        }
+			return string.Format("{0}px, {1,2:F}mm", formWidth, formWidth / PixelsPerMillimeter);
+		}
+
+		private static void DrawTick(Graphics g, int xPos, int formHeight, int tickHeight, bool isTop = false)
+		{
+			if (isTop)
+			{
+				g.DrawLine(Pens.Black, xPos, 0, xPos, tickHeight);
+			}
+			else
+			{
+				g.DrawLine(Pens.Black, xPos, formHeight, xPos, formHeight - tickHeight);
+			}
 		}
 
 		private void DrawTickLabel(Graphics g, string text, int xPos, int formHeight, int height, bool isTop = false)
 		{
-		    if (isTop)
-		    {
-		        g.DrawString(text, Font, Brushes.Black, xPos, height);
-		    }
-		    else
-		    {
-			    g.DrawString(text, Font, Brushes.Black, xPos, formHeight - height - Font.Height);
-		    }
+			if (isTop)
+			{
+				g.DrawString(text, Font, Brushes.Black, xPos, height);
+			}
+			else
+			{
+				g.DrawString(text, Font, Brushes.Black, xPos, formHeight - height - Font.Height);
+			}
 		}
 
 		private static void Main(params string[] args)
